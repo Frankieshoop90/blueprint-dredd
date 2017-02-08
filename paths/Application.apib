@@ -1,0 +1,205 @@
+## Apllication collection [/v1/application]
+  
+### Creates a new application [POST /v1/application]
++ Request (application/json)
+    + Headers
+        
+            Authorization: Bearer
+    
+    + Body
+
+            {
+                "name": "string",
+                "description": "description",
+                "domain": "http://www.domain.com",
+                "embedded-domain": "http://www.domain.com",
+                "all-domains": true
+            }
+         
++ Response 200 (application/json)
+
+    Success
+    
+    + Attributes (Application_Response)
+
++ Response 401 (application/json)
+
+    User authentication error
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)   
+   
+###  Returns a list of all applications [GET /v1/application/]
++ Request (application/x-www-form-urlencoded)
+    + Headers
+    
+            Authorization: Bearer
+
++ Response 200 (application/json)
+
+    Returns a list of all applications
+
+    + Attributes (Application_List)
+
++ Response 401 (application/json)
+
+    Unauthorized - access application is invalid or doesn't have access privileges to requested resource
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    Forbidden - access to resource forbidden for this application
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    Server error
+
+    + Attributes (Error_Response)
+
+###  Information about created application [GET /v1/application/{applicationId}]
++ Request (application/x-www-form-urlencoded)
+    + Headers
+    
+            Authorization: Bearer
+    
++ Parameters
+    + applicationId: `applicationId` (string) - Id of an application.
+
+
++ Response 200 (application/json)
+
+    Success Information about created application
+
+    + Attributes (Application_Response)
+
++ Response 401 (application/json)
+
+    User authentication error
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 404 (application/json)
+
+    The server has not found anything matching the Request-URI
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+    
+### Updates application [PUT /v1/application/{applicationId}]
++ Request (application/x-www-form-urlencoded)
+
+    Updates application. Parameter all-domains can be 0/1 or true/false
+
+    + Headers
+    
+            Authorization: Bearer
+        
+    + Body
+
+            {
+                "name": "string",
+                "description": "string",
+                "domain": "http://www.domain.com",
+                "embedded-domain": "http://www.domain.com",
+                "all-domains": true
+            }
+        
++ Parameters
+    + applicationId: `applicationId` (string) - Id of an application.
+
+
++ Response 200 (application/json)
+
+    Success Information about created application
+
+    + Attributes (Application_Response)
+
++ Response 401 (application/json)
+
+    User authentication error
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 404 (application/json)
+
+    The server has not found anything matching the Request-URI
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+
+### Deletes application item [DELETE /v1/application/{applicationId}]
++ Request (application/x-www-form-urlencoded)
+    + Headers
+    
+            Authorization: Bearer
+    
++ Parameters
+    + applicationId: `applicationId` (string) - Id of an application.
+
+
++ Response 200 (application/json)
+
+    Success
+
+    + Attributes (Delete_Response)
+
++ Response 401 (application/json)
+
+    User authentication error
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 404 (application/json)
+
+    The server has not found anything matching the Request-URI
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+    

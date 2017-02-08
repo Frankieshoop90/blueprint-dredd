@@ -1,2 +1,7 @@
 header.apib
 
+paths/Application.apib
+
+response/dataStructure.apib
+response/response.apib
+response/Models.apib
