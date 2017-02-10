@@ -32,9 +32,25 @@
 + `name`: `PDF_FILE_NAME` (string)
 + `type`: `PDF` (string)
 + `created`: `0` (number)
-+ `folder` (array[Folder_info])
++ `folder` (Folder_info)
 
 ## `Folder_info` (object)
 + `id`: `0` (number)
 + `name`: `MyFolder` (string)
 + `documents_count`: `0` (number)
+
+
+## `Fillable_Fields` (object)
++ `key1`: (string, optional)
+    + Default: 0
++ `key2`: (string, optional)
+    + Default: 0`
+
+## `Fillable_Template_Field` (object)
++ `type`: `PDF` (string)
++ `name`: `PDF_FILE_NAME` (string, optional)
+    + Default: 0
++ `label`: `Title`(string, optional)
+    + Default: 0
++ `required` (boolean)
+

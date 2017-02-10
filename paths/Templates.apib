@@ -92,25 +92,332 @@
     The server encountered an unexpected condition which prevented it from fulfilling the request
 
     + Attributes (Error_Response)
+    
+### Creates a new document template by uploading file from URL [POST /v2/templates]
++ Request (application/json)
+    
+    + Headers
+    
+            Authorization: Bearer
 
-### [GET /v2/templates/create]
+    + Attributes
+        + file: "http://www.adobe.com/content/dam/Adobe/en/devnet/acrobat/pdfs/pdf_open_parameters.pdf" (string, required)
+        + folderid (number, optional) - The blog post article
+            + Default: 0
+      
++ Response 200 (application/json)
 
-### [GET /v2/templates/{template}]
+    Success - information about document template
 
-### [PUT /v2/templates/{template}]
-### [DELETE /v2/templates/{template}]
+    + Attributes (Template_info)
+  
++ Response 400 (application/json)
 
-### [GET /v2/templates/{template}/dictionary]
-### [GET /v2/templates/{template}/download]
-### [GET /v2/templates/{template}/download_signatures]
-### [GET /v2/templates/{template}/edit]
-### [POST /v2/templates/{template}/fill]
-### [GET /v2/templates/{template}/filled_document]
-### [GET /v2/templates/{template}/original_document]
-### [GET /v2/templates/{template}/values]
+    Bad request - request validation error
+
+    + Attributes (Error_Response)
+    
++ Response 401 (application/json)
+
+    Unauthorized - access application is invalid or doesn't have access privileges to requested resource
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+    
+### Information about created template [GET /v2/templates/{templateId}]
++ Request (application/json)
+    
+    + Headers
+    
+            Authorization: Bearer
+
++ Parameters
+    + templateId: `templateId` (number, required) - Id of a template.
+      
++ Response 200 (application/json)
+
+    Success - Information about created document template
+
+    + Attributes (Template_info)
+     
++ Response 401 (application/json)
+
+    User authentication error
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 404 (application/json)
+
+    The server has not found anything matching the Request-URI
+
+    + Attributes (Error_Response)
+    
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+
+### Updates template information [PUT /v2/templates/{templateId}]
++ Request (application/json)
+    
+    + Headers
+    
+            Authorization: Bearer
+
++ Parameters
+    + templateId: `templateId` (number, required) - Id of a template.
+      
++ Response 200 (application/json)
+
+    Success - Information about created document template
+
+    + Attributes (Template_info)
+     
++ Response 401 (application/json)
+
+    User authentication error
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 404 (application/json)
+
+    The server has not found anything matching the Request-URI
+
+    + Attributes (Error_Response)
+    
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+
+### Deletes document template item [DELETE /v2/templates/{templateId}]
++ Request (application/json)
+    
+    + Headers
+    
+            Authorization: Bearer
+
++ Parameters
+    + templateId: `templateId` (number, required) - Id of a template.
+      
++ Response 200 (application/json)
+
+    Success 
+
+    + Attributes (Delete_Response)
+     
++ Response 401 (application/json)
+
+    User authentication error
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 404 (application/json)
+
+    The server has not found anything matching the Request-URI
+
+    + Attributes (Error_Response)
+    
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+
+###  Fillable fields for selected document template [GET /v2/templates/{templateId}/dictionary]
++ Request (application/json)
+    
+    + Headers
+    
+            Authorization: Bearer
+
++ Parameters
+    + templateId: `templateId` (number, required) - Id of a template.
+      
++ Response 200 (application/json)
+
+    Success 
+
+    + Attributes (array[Fillable_Template_Field])
+     
++ Response 401 (application/json)
+
+    User authentication error
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 404 (application/json)
+
+    The server has not found anything matching the Request-URI
+
+    + Attributes (Error_Response)
+    
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+    
+### Downloads document template [GET /v2/templates/{templateId}/download]
++ Request (application/json)
+    
+    + Headers
+    
+            Authorization: Bearer
+
++ Parameters
+    + templateId: `templateId` (number, required) - Id of a template.
+      
++ Response 200
+
+    Success. PDF file to download
+         
++ Response 401 (application/json)
+
+    User authentication error
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 404 (application/json)
+
+    The server has not found anything matching the Request-URI
+
+    + Attributes (Error_Response)
+    
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+    
+### Downloads zip archive of signatures [GET /v2/templates/{templateId}/download_signatures]
++ Request (application/json)
+    
+    + Headers
+    
+            Authorization: Bearer
+
++ Parameters
+    + templateId: `templateId` (number, required) - Id of a template.
+      
++ Response 200
+
+    Success. Zip archive to download
+         
++ Response 401 (application/json)
+
+    User authentication error
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 404 (application/json)
+
+    The server has not found anything matching the Request-URI
+
+    + Attributes (Error_Response)
+    
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+    
+### Fills a fillable form template [POST /v2/templates/{templateId}/fill]
++ Request (application/json)
+    
+    + Headers
+    
+            Authorization: Bearer
+
+    + Attributes
+        + templateId: 0 (number, required)
+        + fillablefields (Fillable_Fields)
+      
++ Response 200 (application/json)
+
+    Success - filled the form template
+
+    + Attributes (Template_info)
+  
++ Response 400 (application/json)
+
+    Bad request - request validation error
+
+    + Attributes (Error_Response)
+    
++ Response 401 (application/json)
+
+    Unauthorized - access application is invalid or doesn't have access privileges to requested resource
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+
+### [GET /v2/templates/{templateId}/filled_document]
+### [GET /v2/templates/{templateId}/original_document]
+### [GET /v2/templates/{templateId}/values]
 
 
-### [GET /v2/templates/{template}/constructor]
-### [POST /v2/templates/{template}/constructor]
-### [DELETE /v2/templates/{template}/constructor]
-### [DELETE /v2/templates/{template}/constructor/{hash}]
+### [GET /v2/templates/{templateId}/constructor]
+### [POST /v2/templates/{templateId}/constructor]
+### [DELETE /v2/templates/{templateId}/constructor]
+### [DELETE /v2/templates/{templateId}/constructor/{hash}]
