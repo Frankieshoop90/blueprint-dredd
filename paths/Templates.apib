@@ -1,0 +1,116 @@
+## Template collection [/v2/templates]
+  
+### Retrieves a list of uploaded templates [GET /v2/templates]
++ Request (application/x-www-form-urlencoded)
+    + Headers
+    
+            Authorization: Bearer
+
+    + Body
+
+            {
+                "folderid": "integer",
+                "datefrom": "date",
+                "dateto": "date"
+            }
+    
++ Response 200 (application/json)
+
+    Success - information about document template
+
+    + Attributes (Template_list)
+    
++ Response 400 (application/json)
+
+    Bad request - request validation error
+
+    + Attributes (Error_Response)
+    
++ Response 401 (application/json)
+
+    Unauthorized - access application is invalid or doesn't have access privileges to requested resource
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    Forbidden - access to resource forbidden for this application
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    Server error
+
+    + Attributes (Error_Response)
+
+### Creates a new document template by uploading file in form-data [POST /v2/templates]
++ Request (multipart/form-data; boundary={boundary value})
+    
+    + Headers
+    
+            Authorization: Bearer
+
+    + Body
+            --{boundary value}
+            Content-Disposition: form-data; name='file'
+            Content-Type: text/plain (according to the type of the uploaded file)
+            
+            {file content}
+            --{boundary value}
+            Content-Disposition: form-data; name="folderid"
+            
+            0
+            --{boundary value}--        
+      
++ Response 200 (application/json)
+
+    Success - information about document template
+
+    + Attributes (Template_Info)
+  
++ Response 400 (application/json)
+
+    Bad request - request validation error
+
+    + Attributes (Error_Response)
+    
++ Response 401 (application/json)
+
+    Unauthorized - access application is invalid or doesn't have access privileges to requested resource
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+
+### [GET /v2/templates/create]
+
+### [GET /v2/templates/{template}]
+
+### [PUT /v2/templates/{template}]
+### [DELETE /v2/templates/{template}]
+
+### [GET /v2/templates/{template}/dictionary]
+### [GET /v2/templates/{template}/download]
+### [GET /v2/templates/{template}/download_signatures]
+### [GET /v2/templates/{template}/edit]
+### [POST /v2/templates/{template}/fill]
+### [GET /v2/templates/{template}/filled_document]
+### [GET /v2/templates/{template}/original_document]
+### [GET /v2/templates/{template}/values]
+
+
+### [GET /v2/templates/{template}/constructor]
+### [POST /v2/templates/{template}/constructor]
+### [DELETE /v2/templates/{template}/constructor]
+### [DELETE /v2/templates/{template}/constructor/{hash}]
