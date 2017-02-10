@@ -412,12 +412,251 @@
 
     + Attributes (Error_Response)
 
-### [GET /v2/templates/{templateId}/filled_document]
-### [GET /v2/templates/{templateId}/original_document]
-### [GET /v2/templates/{templateId}/values]
+### Uploading the initial version of the document [GET /v2/templates/{templateId}/original_document]
++ Request
 
+    + Headers
 
-### [GET /v2/templates/{templateId}/constructor]
-### [POST /v2/templates/{templateId}/constructor]
-### [DELETE /v2/templates/{templateId}/constructor]
-### [DELETE /v2/templates/{templateId}/constructor/{hash}]
+            Authorization: Bearer
+
++ Parameters
+    + templateId: `templateId` (number, required) - Id of a template.
+
++ Response 200
+
+    Success - Uploading the initial version of the document
+
++ Response 400 (application/json)
+
+    Bad request - request validation error
+
+    + Attributes (Error_Response)
+
++ Response 401 (application/json)
+
+    Unauthorized - access application is invalid or doesn't have access privileges to requested resource
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+
+### Get values for fillable form [GET /v2/templates/{templateId}/values]
++ Request
+
+    + Headers
+
+            Authorization: Bearer
+
++ Parameters
+    + templateId: `templateId` (number) - Id of a template.
+
++ Response 200 (application/json)
+
+    Success - Get values for fillable form
+
+    + Attributes (Template_Values)
+
++ Response 400 (application/json)
+
+    Bad request - request validation error
+
+    + Attributes (Error_Response)
+
++ Response 401 (application/json)
+
+    Unauthorized - access application is invalid or doesn't have access privileges to requested resource
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+
+### Retrieve a list of hash [GET /v2/templates/{templateId}/constructor]
++ Request
+
+    + Headers
+
+            Authorization: Bearer
+
++ Parameters
+    + templateId: `templateId` (number) - Id of a template.
+
++ Response 200 (application/json)
+
+    Success
+
+    + Attributes (array[Constructor_List])
+
++ Response 400 (application/json)
+
+    Bad request - request validation error
+
+    + Attributes (Error_Response)
+
++ Response 401 (application/json)
+
+    Unauthorized - access application is invalid or doesn't have access privileges to requested resource
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+
+### Creates a new share link to document [POST /v2/templates/{templateId}/constructor]
++ Request
+
+    + Headers
+
+            Authorization: Bearer
+
+    + Attributes
+        + expire (number, optional) - The number of days of life for link. Max value - 1000
+            + Default: 5
+
++ Parameters
+    + templateId: `templateId` (number, required) - Id of a template.
+
++ Response 200 (application/json)
+
+    Success - information about new share link
+
+    + Attributes
+        + document_id: `1111111111` (number) - Template id which was shared
+        + hash: `string` (string) - Hash for shared template
+        + url: `some url` (string) - Permalink to edit shared template
+        + short_url: `short link` (string) - Short link  to edit shared template
+
++ Response 400 (application/json)
+
+    Bad request - request validation error
+
+    + Attributes (Error_Response)
+
++ Response 401 (application/json)
+
+    Unauthorized - access application is invalid or doesn't have access privileges to requested resource
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+
+### Deletes all share links to document by id [DELETE /v2/templates/{templateId}/constructor]
++ Request
+
+    + Headers
+
+            Authorization: Bearer
+
++ Parameters
+    + templateId: `templateId` (number, required) - Id of a template.
+
++ Response 200 (application/json)
+
+    Success - information about new share link
+
+    + Attributes
+        + message: `All URLs to the documents were deleted` (string)
+
++ Response 400 (application/json)
+
+    Bad request - request validation error
+
+    + Attributes (Error_Response)
+
++ Response 401 (application/json)
+
+    Unauthorized - access application is invalid or doesn't have access privileges to requested resource
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+
+### Deletes one share link to document by hash [DELETE /v2/templates/{templateId}/constructor/{hash}]
++ Request
+
+    + Headers
+
+            Authorization: Bearer
+
++ Parameters
+    + templateId: `templateId` (number, required) - Id of a template.
+    + hash: `hash` (string, required) - Hash for shared link
+
++ Response 200 (application/json)
+
+    Success - information about new share link
+
+    + Attributes
+        + message: `One URL to the documents was deleted` (string)
+
++ Response 400 (application/json)
+
+    Bad request - request validation error
+
+    + Attributes (Error_Response)
+
++ Response 401 (application/json)
+
+    Unauthorized - access application is invalid or doesn't have access privileges to requested resource
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
