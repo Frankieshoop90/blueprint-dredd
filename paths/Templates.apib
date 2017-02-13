@@ -332,7 +332,56 @@
     The server encountered an unexpected condition which prevented it from fulfilling the request
 
     + Attributes (Error_Response)
-    
+
+### Child documents for selected document template [GET /v2/templates/{templateId}/filled_document]
++ Request
+
+    + Headers
+
+            Authorization: Bearer
+
++ Parameters
+    + templateId: `templateId` (number, required) - Id of a template.
+
++ Response 200 (application/json)
+
+    Success - Information about child template
+
+    + Attributes
+        + items (array[Filled_Document_Response])
+        + `total`: `1` (number)
+        + `current_page`: `1` (number)
+        + `per_page`: 15
+            + Default: 15
+        + `prev_page_url`: `url with page params` (string)
+            + Default: `empty string`
+        + `next_page_url`: `url with page params` (string)
+            + Default: `empty string`
+
++ Response 401 (application/json)
+
+    User authentication error
+
+    + Attributes (Error_Response)
+
++ Response 403 (application/json)
+
+    403 Forbidden - Access to this resource on the server is denied
+
+    + Attributes (Error_Response)
+
++ Response 404 (application/json)
+
+    The server has not found anything matching the Request-URI
+
+    + Attributes (Error_Response)
+
++ Response 500 (application/json)
+
+    The server encountered an unexpected condition which prevented it from fulfilling the request
+
+    + Attributes (Error_Response)
+
 ### Downloads zip archive of signatures [GET /v2/templates/{templateId}/download_signatures]
 + Request (application/json)
     
