@@ -200,7 +200,14 @@
     + Headers
     
             Authorization: Bearer
+            
+    + Body
 
+            {
+                "name": "pdf_file_name"
+                "folder_id": 0
+            }
+        
 + Parameters
     + template_id (number, required) - Id of a template.
     
@@ -209,13 +216,6 @@
     + folder_id (number, optional)
         + Default: 0
 	
-    + Body
-
-            {
-                "name": "pdf_file_name"
-                "folder_id": 0
-            }
-        
 + Response 200 (application/json)
 
     Success - Information about updated document template
