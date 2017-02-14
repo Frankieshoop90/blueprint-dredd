@@ -1,6 +1,5 @@
 header.apib
 
-paths/Application.apib
 paths/Templates.apib
 
 response/dataStructure.apib
