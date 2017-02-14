@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://
+HOST: https://apidev15.pdffiller.com
 
 # Documentation V2
 
@@ -28,6 +28,10 @@ Try to make new easier way to do api-docs
                 "date_from": "date",
                 "date_to": "date"
             }
+            
++ Parameters
+    + datefrom: string (string, optional) - Filter by date from
+    + dateto: string (string, optional) - Filter by date to
     
 + Response 200 (application/json)
 
@@ -171,7 +175,7 @@ Try to make new easier way to do api-docs
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
       
 + Response 200 (application/json)
 
@@ -218,13 +222,13 @@ Try to make new easier way to do api-docs
             }
         
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
     
 + Attributes
     + name  (string, optional)
     + folder_id (number, optional)
         + Default: 0
-    
+        
 + Response 200 (application/json)
 
     Success - Information about updated document template
@@ -263,7 +267,7 @@ Try to make new easier way to do api-docs
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
       
 + Response 200 (application/json)
 
@@ -303,7 +307,7 @@ Try to make new easier way to do api-docs
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
       
 + Response 200 (application/json)
 
@@ -343,7 +347,7 @@ Try to make new easier way to do api-docs
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
       
 + Response 200 (application/pdf)
 
@@ -381,7 +385,7 @@ Try to make new easier way to do api-docs
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
 
 + Response 200 (application/json)
 
@@ -432,7 +436,7 @@ Try to make new easier way to do api-docs
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
       
 + Response 200
 
@@ -479,7 +483,7 @@ Try to make new easier way to do api-docs
             }
             
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
     
 + Attributes
     + fillable_fields (Fillable_fields)
@@ -522,7 +526,7 @@ Try to make new easier way to do api-docs
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
 
 + Response 200 (application/pdf)
 
@@ -600,7 +604,7 @@ Try to make new easier way to do api-docs
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
 
 + Response 200 (application/json)
 
@@ -644,7 +648,7 @@ Try to make new easier way to do api-docs
             + Default: 5
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
 
 + Response 200 (application/json)
 
@@ -688,7 +692,7 @@ Try to make new easier way to do api-docs
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
 
 + Response 200 (application/json)
 
@@ -729,7 +733,7 @@ Try to make new easier way to do api-docs
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template
+    + template_id: 1023456789 (number, required) - Id of a template
     + hash (string, required) - Hash for shared link
 
 + Response 200 (application/json)
