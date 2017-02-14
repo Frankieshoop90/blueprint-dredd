@@ -72,3 +72,9 @@ hooks.before("Apllication collection > Deletes application item", function (tran
     hooks.log('Successfully removed {applicationId} and replaced by current applicationId => '+appID);
     done();
 });
+
+
+hooks.afterAll(function (transactions, done) {
+    hooks.log(transactions.fullPath);
+    done();
+});

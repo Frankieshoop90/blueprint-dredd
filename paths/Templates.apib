@@ -19,6 +19,10 @@
                 "date_from": "date",
                 "date_to": "date"
             }
+            
++ Parameters
+    + datefrom: string (string, optional) - Filter by date from
+    + dateto: string (string, optional) - Filter by date to
     
 + Response 200 (application/json)
 
@@ -162,7 +166,7 @@
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
       
 + Response 200 (application/json)
 
@@ -209,13 +213,13 @@
             }
         
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
     
 + Attributes
     + name  (string, optional)
     + folder_id (number, optional)
         + Default: 0
-    
+	
 + Response 200 (application/json)
 
     Success - Information about updated document template
@@ -254,7 +258,7 @@
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
       
 + Response 200 (application/json)
 
@@ -294,7 +298,7 @@
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
       
 + Response 200 (application/json)
 
@@ -334,11 +338,11 @@
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
       
 + Response 200 (application/pdf)
 
-        Success. PDF file to download
+    Success. PDF file to download
          
 + Response 401 (application/json)
 
@@ -372,7 +376,7 @@
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
 
 + Response 200 (application/json)
 
@@ -423,11 +427,11 @@
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
       
 + Response 200
 
-        Success. Zip archive to download
+    Success. Zip archive to download
          
 + Response 401 (application/json)
 
@@ -470,7 +474,7 @@
             }
             
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
     
 + Attributes
     + fillable_fields (Fillable_fields)
@@ -513,11 +517,11 @@
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
 
 + Response 200 (application/pdf)
 
-        Success - Uploading the initial version of the document
+    Success - Uploading the initial version of the document
 
 + Response 400 (application/json)
 
@@ -591,7 +595,7 @@
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
 
 + Response 200 (application/json)
 
@@ -635,7 +639,7 @@
             + Default: 5
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
 
 + Response 200 (application/json)
 
@@ -679,7 +683,7 @@
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template.
+    + template_id: 1023456789 (number, required) - Id of a template.
 
 + Response 200 (application/json)
 
@@ -720,7 +724,7 @@
             Authorization: Bearer
 
 + Parameters
-    + template_id (number, required) - Id of a template
+    + template_id: 1023456789 (number, required) - Id of a template
     + hash (string, required) - Hash for shared link
 
 + Response 200 (application/json)
