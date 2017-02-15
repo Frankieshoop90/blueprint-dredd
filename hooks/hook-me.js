@@ -117,7 +117,7 @@ hooks.before("Template collection > Child documents for selected document templa
     //reusing data from previous response here
     //replacing id in URL with stashed id from previous response
     var url = transaction.fullPath;
-    transaction.fullPath = url.replace('1023456789', 20748422);
+    transaction.fullPath = url.replace('1023456789', templID);
     hooks.log('Successfully removed {template_id} and replaced by current template_id => '+templID);
     done();
 });
