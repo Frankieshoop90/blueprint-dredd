@@ -1,0 +1,4041 @@
+---
+swagger: '2.0'
+info:
+  version: 1.13.3
+  title: PDFfiller API
+  description: https://api.pdffiller.com
+  termsOfService: http://www.pdffiller.com/en/terms_of_services.htm
+host: api.pdffiller.com
+basePath: "/"
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+tags:
+- name: Authentication
+  description: OAuth authentication
+- name: Document
+  description: Document operations
+- name: Signature
+  description: Signature requests
+- name: Recipient
+  description: Recipient request
+- name: LinkToFill
+  description: Document signature and filling requests
+- name: Custom Logo
+  description: User custom logos
+- name: FillableTemplate
+  description: Fillable document templates
+- name: Token
+  description: Token requests
+- name: Application
+  description: Application requests
+- name: Callback
+  description: Callback requests
+- name: Folder
+  description: Folder requests
+- name: User
+  description: User requests
+paths:
+  "/v1/application":
+    get:
+      tags:
+      - Application
+      summary: Returns a list of all applications
+      description: Returns a list of all applications
+      operationId: listApplication
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Success - List of all created applications
+          schema:
+            type: object
+            required:
+            - total
+            - current_page
+            - per_page
+            - prev_page_url
+            - next_page_url
+            - items
+            title: Application_List
+            properties:
+              items:
+                type: array
+                items:
+                  - "$ref": "#/definitions/Application_Response"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '401':
+          description: Unauthorized - access application is invalid or doesn't have
+            access privileges to requested resource
+          schema:
+            "$ref": "#/definitions/Error_Response"
+        '403':
+          description: Forbidden - access to resource forbidden for this application
+          schema:
+            "$ref": "#/definitions/Error_Response"
+        '500':
+          description: Server error
+          schema:
+            "$ref": "#/definitions/Error_Response"
+    post:
+      tags:
+      - Application
+      summary: Creates a new application
+      description: Creates a new application. Parameter all-domains can be 0/1 or
+        true/false
+      operationId: createApplication
+      produces:
+      - application/json
+      consumes:
+      - multipart/form-data
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - name: name
+        type: string
+        in: formData
+        required: true
+        description: Application Name
+      - name: description
+        type: string
+        in: formData
+        required: true
+        description: Application Description
+      - name: domain
+        type: string
+        in: formData
+        required: true
+        description: Application Domain
+      - name: embedded-domain
+        type: string
+        required: false
+        in: formData
+        description: Application Domain
+      - name: all-domains
+        type: boolean
+        required: false
+        in: formData
+        description: Application Domain
+      - name: logo
+        required: false
+        type: file
+        in: formData
+        description: 'PNG, JPG file. The input can be type of: base64 string, file
+          or url. Only square images.'
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Application_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/application/{applicationId}":
+    get:
+      tags:
+      - Application
+      summary: Information about created application
+      description: Information about created application
+      operationId: infoApplicationId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/applicationIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Application_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    put:
+      tags:
+      - Application
+      summary: Updates application
+      description: Updates application. Parameter all-domains can be 0/1 or true/false
+      operationId: updateApplication
+      produces:
+      - application/json
+      consumes:
+      - multipart/form-data
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/applicationIdQueryParam"
+      - name: name
+        type: string
+        in: formData
+        required: true
+        description: Application Name
+      - name: description
+        type: string
+        in: formData
+        required: true
+        description: Application Description
+      - name: domain
+        type: string
+        in: formData
+        required: true
+        description: Application Domain
+      - name: embedded-domain
+        type: string
+        required: false
+        in: formData
+        description: Application Domain
+      - name: all-domains
+        type: boolean
+        required: false
+        in: formData
+        description: Application Domain
+      - name: logo
+        required: false
+        type: file
+        in: formData
+        description: 'PNG, JPG file. The input can be type of: base64 string, file
+          or url. Only square images.'
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Application_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    delete:
+      tags:
+      - Application
+      summary: Deletes application item
+      description: Deletes application item
+      operationId: deleteApplicationId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/applicationIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Delete_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/callback":
+    post:
+      tags:
+      - Callback
+      description: Creates a new callback.
+      summary: Creates a new callback associated with specific document event.
+      operationId: postCallback
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - name: body
+        in: body
+        description: Callback data
+        required: true
+        schema:
+          "$ref": "#/definitions/Callback_Create_Model_Body"
+      responses:
+        '200':
+          description: Success - information about created callback
+          schema:
+            "$ref": "#/definitions/Callback_Info"
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    get:
+      tags:
+      - Callback
+      description: Returns a list of callback events.
+      summary: Returns a list of callback events.
+      operationId: Callback_Info
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      responses:
+        '200':
+          description: Success - list of callback events
+          schema:
+            title: Callback_List
+            type: object
+            required: [
+            total,
+            current_page,
+            per_page,
+            prev_page_url,
+            next_page_url,
+            items
+            ]
+            properties:
+              items:
+                type: array
+                items:
+                  - "$ref": "#/definitions/Callback_Info"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/callback/{eventCallbackId}":
+    get:
+      tags:
+      - Callback
+      description: Returns information about specific callback by callback id.
+      summary: Returns information about specific callback by callback id.
+      operationId: getCallbackById
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - name: eventCallbackId
+        in: path
+        description: Event callback Id
+        required: true
+        type: integer
+        format: int64
+        minimum: 1
+      responses:
+        '200':
+          description: Success - information about a callback
+          schema:
+            "$ref": "#/definitions/Callback_Info"
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    delete:
+      tags:
+      - Callback
+      description: Deletes a callback.
+      summary: Deletes a callback.
+      operationId: deleteCallbackById
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - name: eventCallbackId
+        in: path
+        description: Event callback Id
+        required: true
+        type: integer
+        format: int64
+        minimum: 1
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Delete_Response"
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    put:
+      tags:
+      - Callback
+      description: Updates callback.
+      summary: Updates callback.
+      operationId: updateCallbackById
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - name: eventCallbackId
+        in: path
+        description: Event callback Id
+        required: true
+        type: integer
+        format: int64
+        minimum: 1
+      - name: body
+        in: body
+        description: Callback data
+        required: true
+        schema:
+          "$ref": "#/definitions/Callback_Update_Model_Body"
+      responses:
+        '200':
+          description: Success - information about a callback
+          schema:
+            "$ref": "#/definitions/Callback_Info"
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/custom_logo":
+    post:
+      tags:
+      - Custom Logo
+      description: Adds a new custom logo from url or multipart.
+      summary: Adds a new custom logo
+      operationId: addLogo
+      produces:
+      - application/json
+      consumes:
+      - application/json
+      - multipart/form-data
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - name: file
+        in: formData
+        type: file
+        required: true
+        description: Logo url or content for upload
+      responses:
+        '200':
+          description: Success - information about added logo
+          schema:
+            "$ref": "#/definitions/Logo_Info"
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    get:
+      tags:
+      - Custom Logo
+      description: Retrieves a list of added user logos.
+      summary: Retrieve a list of added logos
+      operationId: retrieveLogosList
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      responses:
+        '200':
+          description: Success - information about new document template
+          schema:
+            type: object
+            required:
+            - total
+            - current_page
+            - per_page
+            - prev_page_url
+            - next_page_url
+            - items
+            title: Custom_Logo_List
+            properties:
+              items:
+                type: array
+                items:
+                  - "$ref": "#/definitions/Logo_Info"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/custom_logo/{logoId}":
+    get:
+      tags:
+      - Custom Logo
+      summary: Information about added custom logo
+      description: Information about added custom logo
+      operationId: infoLogoId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/logoIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Logo_Info"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    delete:
+      tags:
+      - Custom Logo
+      summary: Deletes user custom logo item
+      description: Deletes user custom logo item
+      operationId: deleteLogoId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/logoIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Delete_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/document":
+    post:
+      tags:
+      - Document
+      description: 'Creates a new document template from url. The filename must contain
+        numbers, English letters or special characters: ( ) _ . Also, the filename
+        extension should be .ppt; .pptx; .doc; .docx; .txt; or .pdf'
+      summary: Create a new document template
+      operationId: createDocumentTemplate
+      consumes:
+      - application/json
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - name: file
+        in: formData
+        type: file
+        required: true
+        description: File url or File content for upload
+      - name: folderid
+        in: formData
+        type: integer
+        description: Folder id where the file will be stored
+        default: 0
+      responses:
+        '200':
+          description: Success - information about new document template
+          schema:
+            "$ref": "#/definitions/Document_Info"
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    get:
+      tags:
+      - Document
+      description: Retrieves a list of uploaded documents.
+      summary: Retrieve a list of uploaded documents
+      operationId: retrieveDocumentList
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - name: folderid
+        in: query
+        description: Filter by folder
+        required: false
+        type: integer
+      - name: datefrom
+        in: query
+        description: Filter by date from (format Y-m-d)
+        required: false
+        type: string
+        format: date
+      - name: dateto
+        in: query
+        description: Filter by date to (format Y-m-d)
+        required: false
+        type: string
+        format: date
+      responses:
+        '200':
+          description: Success - information about new document template
+          schema:
+            type: object
+            required:
+            - total
+            - current_page
+            - per_page
+            - prev_page_url
+            - next_page_url
+            - items
+            title: Document_List
+            properties:
+              items:
+                type: array
+                items:
+                  "$ref": "#/definitions/Document_Info"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/document/{documentId}":
+    get:
+      tags:
+      - Document
+      summary: Information about created document template
+      description: Information about created document template
+      operationId: infoDocumentId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/documentIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Document_Info"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    put:
+      tags:
+      - Document
+      summary: Updates document information.
+      description: Updates document information.
+      operationId: updateDocumentId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/documentIdQueryParam"
+      - "$ref": "#/parameters/documentUpdateRequest"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Document_Info"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    delete:
+      tags:
+      - Document
+      summary: Deletes document template item
+      description: Deletes document template item
+      operationId: deleteDocumentId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/documentIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Delete_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/document/{documentId}/download":
+    get:
+      tags:
+      - Document
+      summary: Downloads document
+      description: Downloads document
+      operationId: downloadDocumentId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/documentIdQueryParam"
+      responses:
+        '200':
+          description: Success. PDF file to download
+        '211':
+          description: The document is not ready for download. Request must be repeated
+            later
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/document/{documentId}/download_signatures":
+    get:
+      tags:
+      - Document
+      summary: Downloads signatures of document
+      description: Downloads zip archive of signatures
+      operationId: downloadSignaturesDocumentId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/documentIdQueryParam"
+      responses:
+        '200':
+          description: Success. Zip archive to download
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/document/{documentId}/constructor":
+    post:
+      tags:
+      - Document
+      description: Creates a new share link to document
+      summary: Create a new share link to document
+      operationId: 'createL2B'
+      consumes:
+      - application/json
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/documentIdQueryParam"
+      - "$ref": "#/parameters/expireQueryParam"
+      responses:
+        '200':
+          description: Success - information about new share link
+          schema:
+            "$ref": "#/definitions/ShareLink_info"
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    delete:
+      tags:
+      - Document
+      summary: Deletes shared links
+      description: Deletes all share links to document by id
+      operationId: 'deleteL2B'
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/documentIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Delete_all_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    get:
+      tags:
+      - Document
+      description: Retrieves a list of hash.
+      summary: Retrieve a list of hash
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/documentIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            title: List of hash
+            properties:
+              items:
+                type: array
+                items:
+                  - "$ref": "#/definitions/List_of_hash"
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/document/{documentId}/constructor/{hash}":
+    delete:
+      tags:
+      - Document
+      summary: Deletes one link
+      description: Deletes one share link to document by hash
+      operationId: 'deleteOneL2BbyHash'
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/documentIdQueryParam"
+      - "$ref": "#/parameters/linkHashQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Delete_one_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fill_request":
+    get:
+      tags:
+      - LinkToFill
+      summary: Returns a list of all document fill requests
+      description: Returns a list of all document fill requests
+      operationId: listLinkToFill
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Success - List of all created filled forms
+          schema:
+            type: object
+            required:
+            - total
+            - current_page
+            - per_page
+            - prev_page_url
+            - next_page_url
+            - items
+            title: Fill_Request_List
+            properties:
+              items:
+                type: array
+                items:
+                  - "$ref": "#/definitions/Fill_Response"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '401':
+          description: Unauthorized - access token is invalid or doesn't have access
+            privileges to requested resource
+          schema:
+            "$ref": "#/definitions/Error_Response"
+        '403':
+          description: Forbidden - unauthorized to access requested resource
+          schema:
+            "$ref": "#/definitions/Error_Response"
+        '500':
+          description: Server error - error occured on the server side
+          schema:
+            "$ref": "#/definitions/Error_Response"
+    post:
+      tags:
+      - LinkToFill
+      summary: Creates a new document and shares it via short url
+      description: Creates a new document and shares it via short url
+      operationId: createLinkToFill
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - in: body
+        name: body
+        description: Link to fill object that needs to be added to the store
+        required: true
+        schema:
+          "$ref": "#/definitions/Fill_Request_Body_Model"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Fill_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fill_request/{fillRequestId}":
+    get:
+      tags:
+      - LinkToFill
+      summary: Information about created fill request item
+      description: Information about created fill request item
+      operationId: infoLinkToFillId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/linkToFillIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Fill_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    put:
+      tags:
+      - LinkToFill
+      summary: Updates fill request item
+      description: Updates fill request item
+      operationId: updateLinkToFill
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/linkToFillIdQueryParam"
+      - in: body
+        name: body
+        description: Fill request object that needs to be updated
+        required: true
+        schema:
+          "$ref": "#/definitions/Fill_Request_Update_Body_Model"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Fill_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    delete:
+      tags:
+      - LinkToFill
+      summary: Deletes fill request item
+      description: Deletes fill request item
+      operationId: deleteLinkToFillId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/linkToFillIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Delete_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fill_request/{fillRequestId}/filled_form":
+    get:
+      tags:
+      - LinkToFill
+      summary: List of all filled forms for the given fill request
+      description: List of all filled forms for the given fill request
+      operationId: listFilledForm
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/linkToFillIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            required:
+            - total
+            - current_page
+            - per_page
+            - prev_page_url
+            - next_page_url
+            - items
+            title: Filled_Form_List
+            properties:
+              items:
+                type: array
+                items:
+                  - "$ref": "#/definitions/Filled_Form"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fill_request/{fillRequestId}/download":
+    post:
+      tags:
+      - LinkToFill
+      summary: Download all filled forms as zip archive
+      description: 'You can easily export all the completed documents created via
+        LinkToFill as a zip file. This method can give three statuses: Creating a
+        Job with Job ID, Waiting (if zip is still in progress) or Zip content (if
+        itâ€™s ready to export)'
+      operationId: downloadlistFilledForm
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/linkToFillIdQueryParam"
+      - "$ref": "#/parameters/linkToFillCallbackParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Filled_Forms_Download"
+        '211':
+          "$ref": "#/responses/Waiting"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fillable_template":
+    post:
+      tags:
+      - FillableTemplate
+      summary: Fills a fillable form template
+      description: Populates a fillable form template which was pre-created in PDFFiller
+        fillable constructor
+      operationId: postFillableTemplate
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/fillableTemplateBodyParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Fillable_Template"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    get:
+      tags:
+      - FillableTemplate
+      summary: List of fillable form templates
+      description: Retrieve a list of fillable form templates
+      operationId: getFillableTemplate
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            title: Fillable_Template_List
+            required:
+            - total
+            - current_page
+            - per_page
+            - prev_page_url
+            - next_page_url
+            - items
+            properties:
+              items:
+                type: array
+                items:
+                  - "$ref": "#/definitions/Fillable_Form_Info"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fillable_template/{fillableTemplateId}/download":
+    get:
+      tags:
+      - FillableTemplate
+      summary: Downloads a filled PDF document
+      description: Downloads a filled PDF document
+      operationId: downloadFillableForm
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/fillableTemplateIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Fillable_Template_Download_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fillable_template/{fillableTemplateId}/values":
+    get:
+      tags:
+      - FillableTemplate
+      summary: Get values for fillable form
+      description: Get values for fillable form
+      operationId: fillableValues
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/fillableTemplateIdQueryParam"
+      responses:
+        '200':
+          description: Success. default
+          schema:
+            type: object
+            title: Fillable_Template_Values
+            required:
+            - Text_1
+            - Number_1
+            - Number_2
+            - Checkbox_1
+            properties:
+              Text_1:
+                type: string
+                default: Hello, world!
+              Number_1:
+                type: string
+                default: '5'
+              Number_2:
+                type: string
+                default: '12'
+              Checkbox_1:
+                type: string
+                default: 'OFF'
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fillable_template/{fillableTemplateId}":
+    get:
+      tags:
+      - FillableTemplate
+      summary: Fillable fields for selected document template
+      description: Fillable fields for selected document template
+      operationId: getDictionaryFillableTemplate
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/fillableTemplateIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Fillable_Template_Content_List"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fillable_template/{fillableTemplateId}/filled_document":
+    get:
+      tags:
+      - FillableTemplate
+      summary: Get child documents for fillable template
+      description: Child documents for selected document template
+      operationId: filledDocuments
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/fillableTemplateIdQueryParam"
+      responses:
+        '200':
+          description: Success - information about child template
+          schema:
+            type: object
+            required:
+            - total
+            - current_page
+            - per_page
+            - prev_page_url
+            - next_page_url
+            - items
+            title: Fillable_Template_Filled_Document
+            properties:
+              items:
+                type: array
+                items:
+                  - "$ref": "#/definitions/Fillable_Form_Info"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fill_request/{fillRequestId}/filled_form/{filledFormId}":
+    get:
+      tags:
+      - LinkToFill
+      summary: Information about specific filled form
+      description: Information about specific filled form
+      operationId: infoFilledForm
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/linkToFillIdQueryParam"
+      - "$ref": "#/parameters/linkToFillFilledFormIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Filled_Form"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    delete:
+      tags:
+      - LinkToFill
+      summary: Deletes filled form
+      description: Deletes filled form
+      operationId: deleteFilledForm
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/linkToFillIdQueryParam"
+      - "$ref": "#/parameters/linkToFillFilledFormIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Delete_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fill_request/{fillRequestId}/filled_form/{filledFormId}/export":
+    get:
+      tags:
+      - LinkToFill
+      summary: Exports filled form data
+      description: 'Exports filled form data in one of the available formats: json,
+        xls, xlsx, csv, html'
+      operationId: exportFilledForm
+      produces:
+      - application/json
+      - application/vnd.ms-excel
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      - text/csv
+      - text/html
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/linkToFillIdQueryParam"
+      - "$ref": "#/parameters/linkToFillFilledFormIdQueryParam"
+      - "$ref": "#/parameters/exportFileFormat"
+      responses:
+        '200':
+          description: Success. Attached file to download
+          schema:
+            type: object
+            title: Filled_Form_In_JSON
+            required:
+            - id
+            - name
+            - email
+            - date
+            - time
+            - total_pages
+            - status
+            - pages
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              email:
+                type: string
+              date:
+                type: string
+              time:
+                type: string
+              total_pages:
+                type: integer
+              status:
+                type: string
+              pages:
+                type: array
+                items:
+                  type: object
+                  required:
+                  - number
+                  - prefilled_content_num
+                  - prefilled_content
+                  - fillable_fields_num
+                  - free_fields_num
+                  
+                  title: Filled_Form_Page
+                  properties:
+                    number:
+                      type: integer
+                    prefilled_content_num:
+                      type: integer
+                    prefilled_content:
+                      type: array
+                      items:
+                        type: object
+                        title: Filled_Content
+                        properties:
+                          content:
+                            type: string
+                    fillable_fields_num:
+                      type: integer
+                    free_fields_num:
+                      type: integer
+                    fillable_fields:
+                      type: array
+                      items:
+                        type: object
+                        title: Fillable_Field
+                        properties:
+                          name:
+                            type: string
+                          content:
+                            type: string
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fill_request/{fillRequestId}/filled_form/{filledFormId}/download":
+    get:
+      tags:
+      - LinkToFill
+      summary: Download filled PDF form
+      description: Download filled PDF form
+      operationId: downloadSingleFilledForm
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/linkToFillIdQueryParam"
+      - "$ref": "#/parameters/linkToFillFilledFormIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/LinkToFill_Download_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fill_request/{fillRequestId}/filled_form/{filledFormId}/additional_document":
+    get:
+      tags:
+      - LinkToFill
+      description: Returns information about LinkToFill recipient`s attached additional
+        documents
+      summary: Returns information about LinkToFill recipient`s attached additional
+        documents
+      operationId: getAdditionalDocumentsList
+      produces:
+      - application/json
+      - text/html
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/linkToFillIdQueryParam"
+      - "$ref": "#/parameters/linkToFillFilledFormIdQueryParam"
+      responses:
+        '200':
+          description: Success - information about list of attached additional documents
+          schema:
+            type: object
+            required:
+            - total
+            - current_page
+            - per_page
+            - prev_page_url
+            - next_page_url
+            - items
+            description: Additional documents attached to a fill request.
+            title: Additional_Document_List
+            properties:
+              items:
+                type: array
+                items:
+                  "$ref": "#/definitions/Additional_Document_LinkToFill"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fill_request/{fillRequestId}/filled_form/{filledFormId}/additional_document/{additionalDocumentId}":
+    get:
+      tags:
+      - LinkToFill
+      description: Returns information about LinkToFill recipient`s attached additional
+        document
+      summary: Returns information about LinkToFill recipient`s attached additional
+        documents
+      operationId: getAdditionalDocumentsItem
+      produces:
+      - application/json
+      - text/html
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/linkToFillIdQueryParam"
+      - "$ref": "#/parameters/linkToFillFilledFormIdQueryParam"
+      - "$ref": "#/parameters/additionalDocumentIdQueryParam"
+      responses:
+        '200':
+          description: Success - information about one of attached additional documents
+          schema:
+            "$ref": "#/definitions/Additional_Document_LinkToFill"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fill_request/{fillRequestId}/filled_form/{filledFormId}/additional_document/{additionalDocumentId}/download":
+    get:
+      tags:
+      - LinkToFill
+      description: Downloads a file of LinkToFill filled form`s additional document
+      summary: Downloads a file of LinkToFill filled form`s additional document
+      operationId: downloadAdditionalDocumentsItem
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/linkToFillIdQueryParam"
+      - "$ref": "#/parameters/linkToFillFilledFormIdQueryParam"
+      - "$ref": "#/parameters/additionalDocumentIdQueryParam"
+      responses:
+        '200':
+          description: Success. Attached file to download
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/fill_request/{fillRequestId}/filled_form/{filledFormId}/additional_document/all/download":
+    get:
+      tags:
+      - LinkToFill
+      description: Downloads a zip-file of all LinkToFill filled form`s additional
+        documents
+      summary: Downloads a zip-file of all LinkToFill filled form`s additional documents
+      operationId: downloadAllAdditionalDocuments
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/linkToFillIdQueryParam"
+      - "$ref": "#/parameters/linkToFillFilledFormIdQueryParam"
+      responses:
+        '200':
+          description: Success. Attached zip-file to download
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/folder":
+    post:
+      tags:
+      - Folder
+      description: 'Creates a new folder. The folder name must contain numbers, English
+        letters or special characters: ( ) _ .'
+      summary: Create a new folder
+      operationId: createDocumentTemplateFolder
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - name: body
+        in: body
+        description: Create new folder
+        required: true
+        schema:
+          "$ref": "#/definitions/Folder_Model_Body"
+      responses:
+        '200':
+          description: Success - information about new folder
+          schema:
+            "$ref": "#/definitions/Folder_Info"
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    get:
+      tags:
+      - Folder
+      description: Retrieves a list of folders.
+      summary: Retrieve a list of folders
+      operationId: retrieveDocumentListFolder
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      responses:
+        '200':
+          description: Success - list of folders
+          schema:
+            title: Folder_List
+            type: object
+            required:
+            - total
+            - current_page
+            - per_page
+            - prev_page_url
+            - next_page_url
+            - items
+            properties:
+              items:
+                type: array
+                items:
+                  - "$ref": "#/definitions/Folder_Info"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/folder/{folderId}":
+    get:
+      tags:
+      - Folder
+      summary: Information about created folder
+      description: Information about created folder
+      operationId: infoFolderId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/folderIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Folder_Info"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    delete:
+      tags:
+      - Folder
+      summary: Deletes folder item
+      description: Deletes folder item
+      operationId: deleteFolderId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/folderIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Delete_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    put:
+      tags:
+      - Folder
+      summary: Updates folder name.
+      description: Updates folder name.
+      operationId: updateFolderId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/folderIdQueryParam"
+      - name: body
+        in: body
+        description: Updates folder name.
+        required: true
+        schema:
+          "$ref": "#/definitions/Folder_Model_Body"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Folder_Info"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/oauth/access_token":
+    post:
+      tags:
+      - Authentication
+      description: Obtains authentication token based on provided Client ID and Client
+        Secret
+      summary: Obtain an authentication token
+      operationId: getAuthenticationToken
+      produces:
+      - application/json
+      - text/html
+      parameters:
+      - name: body
+        in: body
+        description: Password grant type
+        required: true
+        schema:
+          "$ref": "#/definitions/AUTH_REQUEST"
+      responses:
+        '200':
+          description: Success - access token
+          schema:
+            "$ref": "#/definitions/AUTH_RESPONSE"
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/signature_request":
+    get:
+      tags:
+      - Signature
+      description: Retrieve a list of all document signature requests
+      summary: Retrieve a list of all document signature requests
+      operationId: listSignatureRequests
+      produces:
+      - application/json
+      - text/html
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      responses:
+        '200':
+          description: Success - list of document signature requests were successfull
+            retrieved
+          schema:
+            title: Signature_Request_List
+            required:
+            - total
+            - current_page
+            - per_page
+            - prev_page_url
+            - next_page_url
+            - items
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  - "$ref": "#/definitions/Signature_Response"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    post:
+      tags:
+      - Signature
+      description: Creates a new sendtosign request. Two sendtosign methods supported
+        - sendtoeach and sendtogroup. Sendtogroup method requires envelope_name and
+        sign_in_order parameters. Fields work only for sendtogroup method.
+      summary: Create new sendtosign request
+      operationId: createSignatureRequest
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - name: body
+        in: body
+        description: Signature request details and recipients information
+        required: true
+        schema:
+          "$ref": "#/definitions/Signature_Request_Create_Body_Model"
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            title: Signature_Response_Item
+            properties:
+              items:
+                type: array
+                items:
+                  - "$ref": "#/definitions/Signature_Response"
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/signature_request/inbox":
+    get:
+      tags:
+      - Signature
+      description: Retrieve a list of all document signature requests in inbox folder
+      summary: Retrieve a list of all document signature requests in inbox folder
+      operationId: listSignatureRequestsInbox
+      produces:
+      - application/json
+      - text/html
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      responses:
+        '200':
+          description: Success - list of document signature requests were successfull
+            retrieved
+          schema:
+            title: Signature_Inbox_List
+            type: object
+            properties:
+              items:
+                type: array
+                items:
+                  - "$ref": "#/definitions/SignatureInboxRequest"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/signature_request/{signatureRequestId}":
+    get:
+      tags:
+      - Signature
+      description: Retrieve a signature request information based on the signature
+        request ID
+      summary: Retrieve a signature request information based on the signature request
+        ID
+      operationId: findSignatureById
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/signatureRequestIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Signature_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    delete:
+      tags:
+      - Signature
+      description: Cancel a signature request for the specified sendtosign ID
+      summary: Cancel the specified signature request
+      operationId: cancelSignatureRequest
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/signatureRequestIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Delete_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/signature_request/{signatureRequestId}/certificate":
+    get:
+      tags:
+      - Signature
+      description: Returns a signature request certificate by signatureRequestId
+      summary: Retrieve a signature request certificate by signatureRequestId
+      operationId: getCertificateById
+      produces:
+      - application/json
+      - text/html
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/signatureRequestIdQueryParam"
+      responses:
+        '200':
+          description: Success - signature request certificate
+          schema:
+            "$ref": "#/definitions/FileDownloadResponse"
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/signature_request/{signatureRequestId}/signed_document":
+    get:
+      tags:
+      - Signature
+      description: Returns a signed document by signatureRequestId
+      summary: Retrieve a signed document by signatureRequestId
+      operationId: getDocumentById
+      produces:
+      - application/json
+      - text/html
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/signatureRequestIdQueryParam"
+      responses:
+        '200':
+          description: Success - returns signed document
+          schema:
+            "$ref": "#/definitions/FileDownloadResponse"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/signature_request/{signatureRequestId}/recipient":
+    get:
+      tags:
+      - Signature
+      description: Returns information about sendtosign recipients and signature status
+      summary: Retrieve information about sendtosign recipients and signature status
+      operationId: listRecipients
+      produces:
+      - application/json
+      - text/html
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/signatureRequestIdQueryParam"
+      responses:
+        '200':
+          description: Success - information about sendtosign recipients
+          schema:
+            title: S2S_Recipient_List
+            type: object
+            required:
+            - total
+            - current_page
+            - per_page
+            - prev_page_url
+            - next_page_url
+            - items            
+            properties:
+              items:
+                type: array
+                items:
+                  "$ref": "#/definitions/Recipient"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    post:
+      tags:
+      - Signature
+      description: Adds additional recipient to sendtosign request
+      summary: Add additional recipient to sendtosign request
+      operationId: addRecipient
+      produces:
+      - application/json
+      - text/html
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - name: body
+        in: body
+        description: Adds additional recipient top signature request
+        required: true
+        schema:
+          "$ref": "#/definitions/Recipient_Create_Model"
+      - "$ref": "#/parameters/signatureRequestIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Signature_Response"
+        '400':
+          "$ref": "#/responses/BadRequest"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/signature_request/{signatureRequestId}/recipient/{recipientId}":
+    get:
+      tags:
+      - Signature
+      description: Returns information about sendtosign recipient and signature status
+      summary: Retrieve information about sendtosign recipient and signature status
+      operationId: getRecipientStatus
+      produces:
+      - application/json
+      - text/html
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/signatureRequestIdQueryParam"
+      - "$ref": "#/parameters/recipientIdQueryParam"
+      responses:
+        '200':
+          description: Success - information about a signature request recipient
+          schema:
+            "$ref": "#/definitions/Recipient"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/signature_request/{signatureRequestId}/recipient/{recipientId}/remind":
+    put:
+      tags:
+      - Signature
+      description: Reminds sendtosign recipient about the sendtosign request
+      summary: Remind a sendtosign recipient about the sendtosign request
+      operationId: remindRecipient
+      produces:
+      - application/json
+      - text/html
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/signatureRequestIdQueryParam"
+      - "$ref": "#/parameters/recipientIdQueryParam"
+      responses:
+        '200':
+          description: Success - confirmation that recipient has been reminded
+          schema:
+            "$ref": "#/definitions/Success_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/signature_request/{signatureRequestId}/recipient/{recipientId}/additional_document":
+    get:
+      tags:
+      - Signature
+      description: Returns information about sendtosign recipient`s attached additional
+        documents
+      summary: Returns information about sendtosign recipient`s attached additional
+        documents
+      operationId: getAdditionalDocumentsListSign
+      produces:
+      - application/json
+      - text/html
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/signatureRequestIdQueryParam"
+      - "$ref": "#/parameters/recipientIdQueryParam"
+      responses:
+        '200':
+          description: Success - information about list of attached additional documents
+          schema:
+            title: S2S_Additional_Document_List
+            type: object
+            required:
+            - total
+            - current_page
+            - per_page
+            - prev_page_url
+            - next_page_url
+            - items
+            description: Additional documents attached to a signature request.
+            properties:
+              items:
+                type: array
+                items:
+                  "$ref": "#/definitions/Additional_Document"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/signature_request/{signatureRequestId}/recipient/{recipientId}/additional_document/{additionalDocumentId}":
+    get:
+      tags:
+      - Signature
+      description: Returns information about sendtosign recipient`s attached additional
+        document
+      summary: Returns information about sendtosign recipient`s attached additional
+        documents
+      operationId: getAdditionalDocumentsItemSign
+      produces:
+      - application/json
+      - text/html
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/signatureRequestIdQueryParam"
+      - "$ref": "#/parameters/recipientIdQueryParam"
+      - "$ref": "#/parameters/additionalDocumentIdQueryParam"
+      responses:
+        '200':
+          description: Success - information about one of attached additional documents
+          schema:
+            "$ref": "#/definitions/Additional_Document"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/signature_request/{signatureRequestId}/recipient/{recipientId}/additional_document/{additionalDocumentId}/download":
+    get:
+      tags:
+      - Signature
+      description: Downloads a file of sendtosign recipient`s additional document
+      summary: Downloads a file of sendtosign recipient`s additional document
+      operationId: downloadAdditionalDocumentsItemSign
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/signatureRequestIdQueryParam"
+      - "$ref": "#/parameters/recipientIdQueryParam"
+      - "$ref": "#/parameters/additionalDocumentIdQueryParam"
+      responses:
+        '200':
+          description: Success. Attached file to download
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/signature_request/{signatureRequestId}/recipient/{recipientId}/additional_document/all/download":
+    get:
+      tags:
+      - Signature
+      description: Downloads a zip-file of all sendtosign recipient`s additional documents
+      summary: Downloads a zip-file of all sendtosign recipient`s additional documents
+      operationId: downloadAllAdditionalDocumentsSign
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/signatureRequestIdQueryParam"
+      - "$ref": "#/parameters/recipientIdQueryParam"
+      responses:
+        '200':
+          description: Success. Attached file to download
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/token":
+    get:
+      tags:
+      - Token
+      summary: Returns a list of all tokens
+      description: Returns a list of all tokens
+      operationId: listToken
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Success - List of all created tokens
+          schema:
+            type: object
+            title: Token_List
+            required:
+            - total
+            - current_page
+            - per_page
+            - prev_page_url
+            - next_page_url
+            - items
+            properties:
+              items:
+                type: array
+                items:
+                  - "$ref": "#/definitions/Token_Response"
+              total:
+                type: integer
+                default: 1
+              current_page:
+                type: integer
+                default: 1
+              per_page:
+                type: integer
+                default: 15
+              prev_page_url:
+                type: string
+              next_page_url:
+                type: string
+        '401':
+          description: Unauthorized - access token is invalid or doesn't have access
+            privileges to requested resource
+          schema:
+            "$ref": "#/definitions/Error_Response"
+        '403':
+          description: Forbidden - access to resource forbidden for this token
+          schema:
+            "$ref": "#/definitions/Error_Response"
+        '500':
+          description: Server error
+          schema:
+            "$ref": "#/definitions/Error_Response"
+    post:
+      tags:
+      - Token
+      summary: Creates a new token
+      description: Creates a new token
+      operationId: createToken
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - in: body
+        name: data
+        description: Token data
+        required: true
+        schema:
+          "$ref": "#/definitions/Token_Model_Body"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Token_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/token/{tokenId}":
+    get:
+      tags:
+      - Token
+      summary: Information about created token
+      description: Information about created token
+      operationId: infoTokenId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/tokenIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Token_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    put:
+      tags:
+      - Token
+      summary: Updates token
+      description: Updates token
+      operationId: updateToken
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/tokenIdQueryParam"
+      - in: body
+        name: data
+        description: Custom data associated with token
+        required: true
+        schema:
+          "$ref": "#/definitions/Token_Model_Body"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Token_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+    delete:
+      tags:
+      - Token
+      summary: Deletes token item
+      description: Deletes token item
+      operationId: deleteTokenId
+      produces:
+      - application/json
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/tokenIdQueryParam"
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/Delete_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+  "/v1/user/me":
+    get:
+      tags:
+      - User
+      summary: Returns user information
+      description: Returns user information
+      operationId: userInfo
+      parameters:
+      - "$ref": "#/parameters/clientCredentialsAuth"
+      produces:
+      - application/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            "$ref": "#/definitions/User_Response"
+        '401':
+          "$ref": "#/responses/Unauthorized"
+        '403':
+          "$ref": "#/responses/Forbidden"
+        '404':
+          "$ref": "#/responses/NotFound"
+        '500':
+          "$ref": "#/responses/InternalServerError"
+definitions:
+  Application_Response:
+    required:
+    - id
+    - secret
+    - name
+    - description
+    - domain
+    - redirect_uri
+    - embedded_client
+    - logo
+    type: object
+    properties:
+      id:
+        type: string
+        default: 3dddda64ae1ac8b9
+        readOnly: true
+      secret:
+        type: string
+        description: Application Secret
+        default: YLTkoW6CEjfI6tOTimsmfChICoiqYawY
+        readOnly: true
+      name:
+        type: string
+        description: Application Name
+      description:
+        type: string
+        description: Application Description
+      domain:
+        type: string
+        description: Embedded JS Client domain
+        default: www.domain.com
+      redirect_uri:
+        type: string
+        description: Application Domain
+        default: http://www.domain.com
+      embedded_client:
+        "$ref": "#/definitions/Application_Embedded_Client"
+      logo:
+        type: string
+        description: The application logo URL
+        default: https://static.pdffiller.com/img/header/logo-pdffiller-small.svg
+  Application_Embedded_Client:
+    type: object
+    required:
+    - domain
+    - allow_all_domains
+    properties:
+      domain:
+        type: string
+        description: Domain, where Client will be placed
+        default: www.domain.com
+      allow_all_domains:
+        type: boolean
+        description: Allow all domains flag
+        default: false
+  AUTH_REQUEST:
+    required:
+    - grant_type
+    - client_id
+    - client_secret
+    - username
+    - password
+    - redirect_uri
+    - code
+    - refresh_token
+    properties:
+      grant_type:
+        type: string
+        default: password
+        enum:
+        - password
+        - authorization_code
+        - refresh_token
+        description: Authentication grant type.
+      client_id:
+        type: string
+        description: 'client_id obtained from PDFFiller: https://pdffiller.com/en/apiform/token.htm'
+        default: qwe1234a5678989r
+      client_secret:
+        type: string
+        description: 'client_secret obtained from PDFFiller: https://pdffiller.com/en/apiform/token.htm'
+        default: qVeRTYpdFfiLle6rrTYPxf2qweR4TyKH
+      username:
+        type: string
+        description: User email, required for grant type 'password'
+        default: username@default.com
+      password:
+        type: string
+        description: Password of user account, required for grant type 'password'
+        default: very!-StRoNg+pass-12345
+      redirect_uri:
+        type: string
+        description: Redirect url, required for grant type 'authorization_code'
+        default: http://default-web-site.com/redirect
+      code:
+        type: string
+        default: ntM7jrk8fx4Y3Gtdefault7N3SbAzCpr6sHkarpdus
+        description: The code received on redirect uri, required for grant type 'authorization_code'
+      refresh_token:
+        type: string
+        description: Refresh token from other aouth response. Can use once only, required
+          for grant type 'refresh_token.
+        default: svopc295hN6ydefaultpIrJNyJR8K1Z1y0PM3tT9
+  AUTH_RESPONSE:
+    required:
+    - access_token
+    - token_type
+    - expires_in
+    - refresh_token
+    properties:
+      access_token:
+        type: string
+        description: Access token to send with every API request
+      token_type:
+        type: string
+        default: Bearer
+        description: Access token type. Only Bearer supported
+        example: Bearer
+      expires_in:
+        type: integer
+        default: 3600
+        description: Access token live time in seconds, default - 3600
+        format: int32
+      refresh_token:
+        type: string
+        description: Token for refresh access token
+  Callback_Create_Model_Body:
+    required:
+    - event_id
+    - callback_url
+    - document_id
+    properties:
+      event_id:
+        type: string
+        description: 'ID of event which triggers a callback. Supported event ids:
+          fill_request.done | signature_request.done'
+      callback_url:
+        type: string
+        description: Callback destination url
+      document_id:
+        type: integer
+        description: Document id to associate callback information with
+  Callback_Update_Model_Body:
+    required:
+    - event_id
+    - callback_url
+    properties:
+      event_id:
+        type: string
+        description: 'ID of an event which triggers a callback. Supported event ids:
+          fill_request.done | signature_request.done'
+      callback_url:
+        type: string
+        description: Callback destination url
+  Callback_Info:
+    type: object
+    required:
+    - id
+    - document_id
+    - event_id
+    - callback_url
+    properties:
+      id:
+        type: integer
+        format: int64
+        default: 1
+        description: Callback id
+      document_id:
+        type: integer
+        format: int64
+        default: 1
+        description: Id of a document associated with callback
+      event_id:
+        type: string
+        default: fill_request.done
+        description: 'ID of an event which triggers a callback. Supported event ids:
+          fill_request.done | signature_request.done'
+      callback_url:
+        type: string
+        default: http://api.pdffiller.com
+        description: Callback destination url
+  Logo_Info:
+    type: object
+    required:
+    - id
+    - width
+    - height
+    - filesize
+    - logo_url
+    properties:
+      id:
+        type: integer
+        format: int64
+      width:
+        type: integer
+      height:
+        type: integer
+      filesize:
+        type: integer
+      logo_url:
+        type: string
+
+
+  FileDownloadResponse:
+    type: string
+    description: PDF file
+  Document_Info:
+    type: object
+    required:
+    - id
+    - name
+    - type
+    - created
+    - folder
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+        default: PDF_FILE_NAME
+      type:
+        type: string
+        default: PDF
+      created:
+        type: integer
+        format: int64
+      folder:
+        "$ref": "#/definitions/Folder_Info"
+
+  ShareLink_info:
+    type: object
+    required:
+    - document_id
+    - hash
+    - url
+    - short_url
+    properties:
+      document_id:
+        type: integer
+        format: int64
+      hash:
+        type: string
+      url:
+        type: string
+      short_url:
+        type: string
+  List_of_hash:
+    type: object
+    required:
+    - hash
+    - expiration
+    properties:
+      hash:
+        type: string
+      expiration:
+        type: string
+  Fillable_Form_Info:
+    type: object
+    required:
+    - id
+    - created
+    properties:
+      id:
+        type: integer
+        format: int64
+      created:
+        type: integer
+        format: int64
+  Fillable_Template:
+    type: object
+    title: Fillable_Template
+    required:
+    - id
+    - document_id
+    properties:
+      id:
+        type: integer
+        format: int64
+      document_id:
+        type: integer
+        format: int64
+  Fillable_Template_Content_List:
+    type: array
+    title: Fillable_Template_Content_List
+    items:
+      type: object
+      required:
+      - type
+      - name
+      - label
+      - required
+      title: Fillable_Template_Field
+      properties:
+        type:
+          type: string
+          default: text
+        name:
+          type: string
+          default: Text_1
+        label:
+          type: string
+          default: Title
+        required:
+          type: boolean
+          default: 'false'
+  Fillable_Template_Download_Response:
+        description: PDF file
+        type: string
+        default: File Content
+  Folder_Model_Body:
+    required:
+    - name
+    properties:
+      name:
+        type: string
+        description: The folder name
+        default: MyFolder
+  Folder_Info:
+    type: object
+    required:
+    - id
+    - name
+    - documents_count
+    title: Folder_Info
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+        default: MyFolder
+      documents_count:
+        type: integer
+        format: int64
+
+  Fill_Request_Update_Body_Model:
+    type: object
+    required:
+    - id
+    - access
+    - status
+    - email_required
+    - redirect_url
+    - allow_downloads
+    - name_required
+    - custom_message
+    - enforce_welcome_agreement
+    - notification_emails
+    - url
+    - required_fields
+    - custom_logo_id
+    - additional_documents
+    - reusable
+    properties:
+      id:
+        type: integer
+        readOnly: true
+      access:
+        type: string
+        description: Access level for the fill request document. Full - read|write|sign.
+          Signature - read|sign.
+        enum:
+        - full
+        - signature
+        default: full
+      status:
+        type: string
+        description: Document access permission. Public - open to everyone. Private
+          - open to the document owner only
+        enum:
+        - public
+        - private
+        default: private
+      email_required:
+        type: boolean
+        default: true
+        description: Email required (true|false)
+      redirect_url:
+        type: string
+        default: ''
+        description: Redirect uri
+      allow_downloads:
+        type: boolean
+        default: false
+        description: Allow to download
+      name_required:
+        type: boolean
+        default: true
+        description: Name required (true|false)
+      custom_message:
+        type: string
+        description: LinkToFill custom message
+      enforce_welcome_agreement:
+        type: boolean
+        description: Shows welcome agreement each time when user will open LinkToFill
+      notification_emails:
+        type: array
+        description: LinkToFill notification emails
+        items:
+          "$ref": "#/definitions/L2F_Notification_Emails"
+      url:
+        description: Document access url
+        type: string
+        readOnly: true
+      required_fields:
+        description: Prevent closing document before filling all fields
+        type: boolean
+        default: false
+      custom_logo_id:
+        description: Document custom logo id
+        type: integer
+        default: 1
+      additional_documents:
+        description: Additional documents required after filling the document
+        type: array
+        items:
+          type: string
+      reusable:
+        description: After filling the form it will be copied to the owner as the
+          fillable form
+        type: boolean
+        default: false
+  Fill_Request_Body_Model:
+    type: object
+    required: [
+      id,
+      document_id,
+      access,
+      status,
+      email_required,
+      redirect_url,
+      allow_downloads,
+      name_required,
+      custom_message,
+      welcome_screen,
+      notification_emails,
+      notifications,
+      url,
+      enforce_required_fields,
+      custom_logo_id,
+      callback_url,
+      additional_documents,
+      reusable
+      ]
+    title: Fill_Request_Create_Bidy_Model
+    properties:
+      id:
+        type: integer
+        readOnly: true
+      document_id:
+        type: integer
+        description: Id of the document template for linkToFill operations
+        default: 67812345
+      access:
+        type: string
+        description: Access level for the fill request document. Full - read|write|sign.
+          Signature - read|sign.
+        enum:
+        - full
+        - signature
+        default: full
+      status:
+        type: string
+        description: Document access permission. Public - open to everyone. Private
+          - open to the document owner only
+        enum:
+        - public
+        - private
+        default: private
+      email_required:
+        type: boolean
+        default: true
+        description: Email required (true|false)
+      redirect_url:
+        type: string
+        default: ''
+        description: Redirect uri
+      allow_downloads:
+        type: boolean
+        default: false
+        description: Allow to download
+      name_required:
+        type: boolean
+        default: true
+        description: Name required (true|false)
+      custom_message:
+        type: string
+        description: LinkToFill custom message
+      welcome_screen:
+        type: boolean
+        description: Shows welcome agreement each time when user will open LinkToFill
+      notification_emails:
+        type: array
+        description: LinkToFill notification emails
+        items:
+          "$ref": "#/definitions/L2F_Notification_Emails"
+      notifications:
+        type: string
+        default: enabled
+        description: 'The notifications mode: ''disabled'' for no notifications, ''enabled''
+          for notifications only and ''with_pdf'' for notifications with PDF copy
+          of document'
+        enum:
+        - disabled
+        - enabled
+        - with_pdf
+      url:
+        description: Document access url
+        type: string
+        readOnly: true
+      enforce_required_fields:
+        description: Prevent closing document before filling all fields
+        type: boolean
+        default: false
+      custom_logo_id:
+        description: Document custom logo id
+        type: integer
+        default: 1
+      callback_url:
+        description: Callback url
+        type: string
+        default: https://www.default/com
+      additional_documents:
+        description: Additional documents required after filling the document
+        type: array
+        items:
+          type: string
+      reusable:
+        description: After filling the form it will be copied to the owner as the
+          fillable form
+        type: boolean
+        default: false
+  Fill_Response:
+    type: object
+    required:
+    - id
+    - document_id
+    - document_name
+    - access
+    - status
+    - email_required
+    - redirect_url
+    - allow_downloads
+    - name_required
+    - custom_message
+    - filled_forms_count
+    - notification_emails
+    - notifications
+    - url
+    - enforce_required_fields
+    - welcome_screen
+    - custom_logo_id
+    - callback_url
+    - additional_documents
+    - reusable
+    - callbacks
+    title: Fill_Response_Info
+    properties:
+      id:
+        type: integer
+        readOnly: true
+      document_id:
+        type: integer
+        description: Id of the document template for linkToFill operations
+        default: 67812345
+      document_name:
+        type: string
+        description: The filename of the document template for linkToFill operations
+      access:
+        type: string
+        description: Access level for the fill request document. Full - read|write|sign.
+          Signature - read|sign.
+        enum:
+        - full
+        - signature
+        default: full
+      status:
+        type: string
+        description: Document access permission. Public - open to everyone. Private
+          - open to the document owner only
+        enum:
+        - public
+        - private
+        default: private
+      email_required:
+        type: boolean
+        default: true
+        description: Email required (true|false)
+      redirect_url:
+        type: string
+        default: ''
+        description: Redirect uri
+      allow_downloads:
+        type: boolean
+        default: false
+        description: Allow to download
+      name_required:
+        type: boolean
+        default: true
+        description: Name required (true|false)
+      custom_message:
+        type: string
+        description: LinkToFill custom message
+      filled_forms_count:
+        type: integer
+        description: Filled forms count
+      notification_emails:
+        type: array
+        description: LinkToFill notification emails
+        items:
+          type: object
+          title: Notification_Emails
+          required:
+          - name
+          - email
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+      notifications:
+        type: string
+        default: enabled
+        description: 'The notifications mode: ''disabled'' for no notifications, ''enabled''
+          for notifications only and ''with_pdf'' for notifications with PDF copy
+          of document'
+        enum:
+        - disabled
+        - enabled
+        - with_pdf
+      url:
+        description: Document access url
+        type: string
+        readOnly: true
+      enforce_required_fields:
+        description: Prevent closing document before filling all fields
+        type: boolean
+        default: false
+      welcome_screen:
+        type: boolean
+        description: Shows welcome agreement each time when user will open LinkToFill
+      custom_logo_id:
+        description: Document custom logo id
+        type: integer
+      callback_url:
+        description: Callback URL
+        type: string
+        default: https://www.default.callback
+      additional_documents:
+        description: Additional documents required after filling the document
+        type: array
+        items:
+          type: object
+          title: Additional_Documents
+          required:
+          - name
+          properties:
+            name:
+              type: string
+      reusable:
+        description: After filling the form it will be copied to the owner as the
+          fillable form
+        type: boolean
+        default: false
+      callbacks:
+        type: array
+        items:
+          "$ref": "#/definitions/L2F_Callback"
+  Filled_Form:
+    type: object
+    required:
+    - id
+    - document_id
+    - name
+    - email
+    - date
+    - ip
+    - token
+    - additional_documents
+    - reusable_document_id
+    properties:
+      id:
+        type: integer
+      document_id:
+        type: integer
+      name:
+        type: string
+      email:
+        type: string
+      date:
+        type: integer
+      ip:
+        type: string
+      token:
+        type: array
+        description: Attached token
+        items:
+          type: string
+      additional_documents:
+        type: array
+        description: Additional documents attached to request
+        title: Additional_Document_LinkToFill
+        items:
+          "$ref": "#/definitions/Additional_Document_LinkToFill"
+      reusable_document_id:
+        description: An ID of reusable fillable document. Present if reusable option
+          is enabled for related LinkToFill
+        type: integer
+  Filled_Forms_Download:
+    type: object
+    required:
+    - job_id
+    - message
+    - callback_url
+    properties:
+      job_id:
+        type: string
+      message:
+        type: string
+      callback_url:
+        type: string
+  LinkToFill_Download_Response:
+    description: PDF file
+    type: string
+
+  Additional_Document_LinkToFill:
+    type: object
+    required:
+    - id
+    - filename
+    - ip
+    - date_created
+    properties:
+      id:
+        type: integer
+        readOnly: true
+        description: Read only field. Not used in post|put operations
+      filename:
+        type: string
+        readOnly: true
+        description: Filename of an additional document. Read only field. Not used
+          in post|put operations
+      ip:
+        type: string
+        readOnly: true
+        default: 192.168.0.1
+        description: Read only field. Not used in post|put operations
+      date_created:
+        type: integer
+        readOnly: true
+        description: Read only field. Not used in post|put operations
+  L2F_Callback:
+    type: object
+    required:
+    - id
+    - event_id
+    - callback_url
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Callback id
+      event_id:
+        type: string
+        default: fill_request.done
+        description: ID of an event which triggers a callback.
+      callback_url:
+        type: string
+        default: http://api.pdffiller.com
+        description: Callback destination url
+  L2F_Notification_Emails:
+    type: object
+    required:
+    - email
+    properties:
+      name:
+        type: string
+      email:
+        type: string
+  Error_Response:
+    required: [errors]
+    properties:
+      errors:
+        type: array
+        items:
+          - "$ref": "#/definitions/Error_Message"
+  WAITING_RESPONSE:
+    type: object
+    required:
+    - status
+    properties:
+      status:
+        type: integer
+  Success_Response:
+    required:
+    - message
+    properties:
+      message:
+        type: string
+  Delete_Response:
+    type: object
+    required:
+    - total
+    - message
+    properties:
+      total:
+        type: integer
+        format: int64
+        default: 1
+      message:
+        type: string
+        default: Row 1 was deleted successfully
+  Error_Message:
+    required:
+      - id
+      - message
+    properties:
+      message:
+        type: string
+      id:
+        type: string
+
+  Delete_one_Response:
+    type: object
+    required:
+    - message
+    properties:
+      message:
+        type: string
+        default: One URL to the document was deleted
+  Delete_all_Response:
+    type: object
+    required:
+    - message
+    properties:
+      message:
+        type: string
+        default: All URLs to the documents were deleted
+  Signature_Request_Create_Body_Model:
+    type: object
+    required:
+    - id
+    - document_id
+    - date_created
+    - date_signed
+    - method
+    - status
+    - envelope_name
+    - security_pin
+    - sign_in_order
+    - recipients
+    - callback_url
+    properties:
+      id:
+        type: integer
+        readOnly: true
+      document_id:
+        type: integer
+        format: int64
+      date_created:
+        type: integer
+        readOnly: true
+      date_signed:
+        type: integer
+        readOnly: true
+      method:
+        enum:
+        - sendtogroup
+        - sendtoeach
+        description: sendtogroup - document to be signed by a group of recipients.
+          sendtoeach - document to be signed individually.
+      status:
+        type: string
+        description: status
+        enum:
+        - IN_PROGRESS
+        - NOT_SENT
+        - REJECTED
+        - SENT
+        - SIGNED
+        readOnly: true
+      envelope_name:
+        type: string
+        description: Required for sendtogroup method. Name of the signature request
+          envelope.
+      security_pin:
+        enum:
+        - standard
+        - enhanced
+        description: Generate security PIN required to open the document
+      sign_in_order:
+        type: boolean
+        description: Required for sendtogroup method. Determines whether request should
+          be signed in specific order.
+      recipients:
+        type: array
+        items:
+          - "$ref": "#/definitions/Recipient"
+      callback_url:
+        description: Callback url
+        type: string
+  Signature_Response:
+    type: object
+    required:
+    - id
+    - document_id
+    - date_created
+    - date_signed
+    - method
+    - status
+    - envelope_name
+    - security_pin
+    - sign_in_order
+    - recipients
+    - callbacks
+    properties:
+      id:
+        type: integer
+        readOnly: true
+      document_id:
+        type: integer
+        format: int64
+      date_created:
+        type: integer
+        readOnly: true
+      date_signed:
+        type: integer
+        readOnly: true
+      method:
+        enum:
+        - sendtogroup
+        - sendtoeach
+        description: sendtogroup - document to be signed by a group of recipients.
+          sendtoeach - document to be signed individually.
+      status:
+        type: string
+        description: status
+        enum:
+        - IN_PROGRESS
+        - NOT_SENT
+        - REJECTED
+        - SENT
+        - SIGNED
+        readOnly: true
+      envelope_name:
+        type: string
+        description: Required for sendtogroup method. Name of the signature request
+          envelope.
+      security_pin:
+        enum:
+        - standard
+        - enhanced
+        description: Generate security PIN required to open the document
+      sign_in_order:
+        type: boolean
+        description: Required for sendtogroup method. Determines whether request should
+          be signed in specific order.
+      recipients:
+        type: array
+        items:
+          - "$ref": "#/definitions/Recipient"
+      callbacks:
+        type: array
+        items:
+          - "$ref": "#/definitions/S2SCallback"
+  SignatureInboxRequest:
+    type: object
+    required:
+    - id
+    - document_id
+    - sender
+    - date_created
+    - date_signed
+    - method
+    - status
+    - envelope_name
+    - security_pin
+    - sign_in_order
+    - recipients
+    properties:
+      id:
+        type: integer
+        readOnly: true
+      document_id:
+        type: integer
+        format: int64
+      sender:
+        type: string
+        description: Document signer email. Read only field. Not used in post|put
+          operations
+      date_created:
+        type: integer
+        readOnly: true
+      date_signed:
+        type: integer
+        readOnly: true
+      method:
+        enum:
+        - sendtoeach
+        - sendtogroup
+        description: sendtogroup - document to be signed by a group of recipients.
+          sendtoeach - document to be signed individually.
+      status:
+        type: string
+        description: status
+        enum:
+        - IN_PROGRESS
+        - NOT_SENT
+        - REJECTED
+        - SENT
+        - SIGNED
+        readOnly: true
+      envelope_name:
+        type: string
+        description: Required for sendtogroup method. Name of the signature request
+          envelope.
+      security_pin:
+        enum:
+        - standard
+        - enhanced
+        description: Generate security PIN required to open the document
+      sign_in_order:
+        type: boolean
+        description: Required for sendtogroup method. Determines whether request should
+          be signed in specific order.
+      recipients:
+        type: array
+        items:
+          - "$ref": "#/definitions/Recipient"
+  Recipient:
+    type: object
+    title: Recipient
+    required:
+    - id
+    - user_id
+    - email
+    - name
+    - status
+    - order
+    - ip
+    - message_subject
+    - message_text
+    - date_created
+    - date_signed
+    - access
+    - fields
+    - phone_authenticate
+    - additional_documents
+    - require_photo
+    properties:
+      id:
+        type: integer
+        readOnly: true
+        description: Read only field. Not used in post|put operations
+      user_id:
+        type: integer
+        readOnly: true
+        description: Document signer id. Read only field. Not used in post|put operations
+      email:
+        type: string
+        description: Document signer email. Read only field. Not used in post|put
+          operations
+      name:
+        type: string
+      status:
+        type: string
+        readOnly: true
+        description: Document email request status. Read only field. Not used in post|put
+          operations
+        enum:
+        - SENT
+        - NOT_SENT
+      order:
+        type: integer
+        format: int32
+        description: Document signing order. Required only when signature request
+          method is sendtogroup
+      ip:
+        type: string
+        readOnly: true
+        description: IP of the document signer. Read only field. Not used in post|put
+          operations
+      message_subject:
+        type: string
+      message_text:
+        type: string
+      date_created:
+        type: integer
+        format: int32
+      date_signed:
+        type: integer
+        format: int32
+      access:
+        enum:
+        - full
+        - signature
+        default: signature
+        description: full - user can edit document while signing; signature - user
+          can only make a signature;
+      fields:
+        type: object
+        title: Access_Field
+        description: Access to fillable fields
+        properties:
+          allow:
+            type: array
+            description: Allowed editing
+            items:
+              type: string
+          deny:
+            type: array
+            description: Disabled editing
+            items:
+              type: string
+      phone_authenticate:
+        type: string
+        description: Password will be sent to authenticate user before signing the
+          document
+        default: 415 555 2671
+      additional_documents:
+        type: array
+        description: Additional documents attached to a signature request.
+        items:
+          - "$ref": "#/definitions/Additional_Document"
+      require_photo:
+        type: boolean
+        default: false
+  Additional_Document:
+    type: object
+    required:
+    - id
+    - filename
+    - ip
+    - date_created
+    - document_request_notification
+    properties:
+      id:
+        type: integer
+        readOnly: true
+        default: 12018
+        description: Read only field. Not used in post|put operations
+      filename:
+        type: string
+        readOnly: true
+        description: Filename of an additional document. Read only field. Not used
+          in post|put operations
+      ip:
+        type: string
+        readOnly: true
+        description: Read only field. Not used in post|put operations
+      date_created:
+        type: integer
+        readOnly: true
+        description: Read only field. Not used in post|put operations
+      document_request_notification:
+        type: string
+
+  Recipient_Create_Model:
+    type: object
+    required:
+    - recipients
+    properties:
+      recipients:
+        type: array
+        items:
+          type: object
+          required:
+          - name
+          - email
+          - message_subject
+          - message_text
+          - access
+          - phone_authenticate
+          - fields
+          - additional_documents
+          - require_photo
+          - order
+          title: Recipient_Create_Info
+          properties:
+            email:
+              type: string
+              description: Recipient email
+            name:
+              type: string
+            message_subject:
+              type: string
+            message_text:
+              type: string
+            access:
+              enum:
+              - full
+              - signature
+              default: signature
+              description: full - user can edit document while signing; signature
+                - user can only make a signature;
+            phone_authenticate:
+              type: string
+              description: Password will be sent to authenticate user before signing
+                the document
+              default: 415 555 2671
+            fields:
+              type: object
+              description: Access to fillable fields
+              title: Fillable_Fields_Access
+              properties:
+                allow:
+                  type: array
+                  description: Allowed editing
+                  items:
+                    type: string
+                deny:
+                  type: array
+                  description: Disabled editing
+                  items:
+                    type: string
+            additional_documents:
+              type: array
+              items:
+                - "$ref": "#/definitions/Additional_Document"
+            require_photo:
+              type: boolean
+              default: false
+            order:
+              type: integer
+              format: int32
+              description: required when signature request method is sendtogroup
+
+  S2SCallback:
+    type: object
+    required:
+    - id
+    - event_id
+    - callback_url
+    properties:
+      id:
+        type: integer
+        format: int64
+        default: 1
+        description: Callback id
+      event_id:
+        type: string
+        default: signature_request.done
+        description: ID of an event which triggers a callback.
+      callback_url:
+        type: string
+        default: http://api.pdffiller.com
+        description: Callback destination url
+  Token_Model_Body:
+    type: object
+    title: Token_Model_Body
+    properties:
+      data:
+        type: array
+        description: Custom information to attach to the token
+        items:
+          type: string
+  Token_Response:
+    type: object
+    required:
+    - id
+    - hash
+    - data
+    properties:
+      id:
+        type: integer
+        readOnly: true
+      hash:
+        type: string
+        description: Token hash value
+        default: YLTkoW6CEjfI6tOTimsmfChICoiqYawY
+      data:
+        type: array
+        description: Custom information attached to the token
+        items:
+          type: string
+  User_Response:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: User id
+      email:
+        type: string
+        description: User email
+      avatar:
+        type: string
+        description: URL to user current avatar
+parameters:
+  clientCredentialsAuth:
+    name: Authorization
+    in: header
+    description: Bearer Access Token obtained from client credentials
+    required: true
+    type: string
+  recipientIdQueryParam:
+    name: recipientId
+    in: path
+    description: Signature request recipient Id
+    required: true
+    type: integer
+    format: int64
+    minimum: 1
+  additionalDocumentIdQueryParam:
+    name: additionalDocumentId
+    in: path
+    description: Attached additional document Id
+    required: true
+    type: integer
+    format: int64
+    minimum: 1
+  fillableTemplateIdQueryParam:
+    name: fillableTemplateId
+    in: path
+    description: Fillable template ID
+    required: true
+    type: integer
+    format: int64
+    minimum: 1
+  fillableTemplateBodyParam:
+    name: body
+    in: body
+    schema:
+      title: Fillable_Template_Body_Model
+      type: object
+      required:
+      - document_id
+      - fillable_fields
+      properties:
+        document_id:
+          type: integer
+        fillable_fields:
+          title: Fillable_Fields
+          type: object
+          required:
+          - key1
+          - key2
+          properties:
+            key1:
+              type: string
+            key2:
+              type: string
+  signatureRequestIdQueryParam:
+    name: signatureRequestId
+    in: path
+    description: Signature request Id
+    required: true
+    type: integer
+    format: int64
+    minimum: 1
+  linkToFillIdQueryParam:
+    name: fillRequestId
+    in: path
+    description: Fill request Id
+    required: true
+    type: string
+    minimum: 1
+  linkToFillFilledFormIdQueryParam:
+    name: filledFormId
+    in: path
+    description: Filled form document Id
+    required: true
+    type: string
+    minimum: 1
+  linkToFillCallbackParam:
+    name: body
+    in: body
+    schema:
+      type: object
+      title: Callback
+      required:
+      - callback_url
+      properties:
+        callback_url:
+          type: string
+  tokenIdQueryParam:
+    name: tokenId
+    in: path
+    description: Token Id
+    required: true
+    type: integer
+    format: int64
+    minimum: 1
+  applicationIdQueryParam:
+    name: applicationId
+    in: path
+    description: Application Id
+    required: true
+    type: string
+  exportFileFormat:
+    name: format
+    in: query
+    description: 'Export format: json, xls, xlsx, html, csv'
+    required: false
+    type: string
+    enum:
+    - json
+    - xls
+    - xlsx
+    - csv
+    - html
+    default: json
+  documentIdQueryParam:
+    name: documentId
+    in: path
+    description: Document Id
+    required: true
+    type: integer
+    format: int64
+    minimum: 1
+  folderIdQueryParam:
+    name: folderId
+    in: path
+    description: Folder Id
+    required: true
+    type: integer
+    format: int64
+    minimum: 1
+  logoIdQueryParam:
+    name: logoId
+    in: path
+    description: Custom logo ID
+    required: true
+    type: integer
+    format: int64
+    minimum: 1
+  documentUpdateRequest:
+    name: body
+    in: body
+    schema:
+      type: object
+      title: Document_Update_Body_Model
+      required:
+      - name
+      - folderid
+      properties:
+        name:
+          type: string
+        folderid:
+          type: integer
+  linkHashQueryParam:
+    name: hash
+    in: path
+    description: share link hash
+    required: true
+    type: string
+  expireQueryParam:
+    name: expire
+    in: formData
+    required: true
+    type: integer
+    description: Expiration in days
+    default: 5
+responses:
+  BadRequest:
+    description: Bad request - request validation error
+    schema:
+      "$ref": "#/definitions/Error_Response"
+  Unauthorized:
+    description: User authentication error
+    schema:
+      "$ref": "#/definitions/Error_Response"
+  NotFound:
+    description: The server has not found anything matching the Request-URI
+    schema:
+      "$ref": "#/definitions/Error_Response"
+  InternalServerError:
+    description: The server encountered an unexpected condition which prevented it
+      from fulfilling the request
+    schema:
+      "$ref": "#/definitions/Error_Response"
+  Forbidden:
+    description: 403 Forbidden - Access to this resource on the server is denied
+    schema:
+      "$ref": "#/definitions/Error_Response"
+  Waiting:
+    description: Data for response is not ready at the moment. Please resend request
+      later
+    schema:
+      "$ref": "#/definitions/WAITING_RESPONSE"
