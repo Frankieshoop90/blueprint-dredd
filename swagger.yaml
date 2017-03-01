@@ -1307,7 +1307,9 @@ paths:
         '200':
           description: Success
           schema:
-            "$ref": "#/definitions/Fillable_Template_Content_List"
+            type: array
+            items:
+              - "$ref": "#/definitions/Fillable_Template_Content_List"
         '401':
           "$ref": "#/responses/Unauthorized"
         '403':
@@ -1477,7 +1479,7 @@ paths:
                   - prefilled_content
                   - fillable_fields_num
                   - free_fields_num
-                  
+                  - fillable_fields
                   title: Filled_Form_Page
                   properties:
                     number:
@@ -1489,6 +1491,8 @@ paths:
                       items:
                         type: object
                         title: Filled_Content
+                        required:
+                        - content
                         properties:
                           content:
                             type: string
@@ -1501,6 +1505,9 @@ paths:
                       items:
                         type: object
                         title: Fillable_Field
+                        required:
+                        - name
+                        - content
                         properties:
                           name:
                             type: string
@@ -1544,9 +1551,9 @@ paths:
     get:
       tags:
       - LinkToFill
-      description: Returns information about LinkToFill recipient`s attached additional
+      description: Returns information about list of LinkToFill recipient`s attached additional
         documents
-      summary: Returns information about LinkToFill recipient`s attached additional
+      summary: Returns information about list of LinkToFill recipient`s attached additional
         documents
       operationId: getAdditionalDocumentsList
       produces:
@@ -1574,7 +1581,7 @@ paths:
               items:
                 type: array
                 items:
-                  "$ref": "#/definitions/Additional_Document_LinkToFill"
+                  - "$ref": "#/definitions/Additional_Document_LinkToFill"
               total:
                 type: integer
                 default: 1
@@ -1600,9 +1607,9 @@ paths:
     get:
       tags:
       - LinkToFill
-      description: Returns information about LinkToFill recipient`s attached additional
+      description: Returns information about one of LinkToFill recipient`s attached additional
         document
-      summary: Returns information about LinkToFill recipient`s attached additional
+      summary: Returns information about one of LinkToFill recipient`s attached additional
         documents
       operationId: getAdditionalDocumentsItem
       produces:
@@ -1938,6 +1945,8 @@ paths:
           schema:
             type: object
             title: Signature_Response_Item
+            required:
+            - items
             properties:
               items:
                 type: array
@@ -1972,6 +1981,13 @@ paths:
           schema:
             title: Signature_Inbox_List
             type: object
+            required:
+            - items
+            - total
+            - current_page
+            - per_page
+            - prev_page_url
+            - next_page_url
             properties:
               items:
                 type: array
@@ -2162,13 +2178,13 @@ paths:
       - text/html
       parameters:
       - "$ref": "#/parameters/clientCredentialsAuth"
+      - "$ref": "#/parameters/signatureRequestIdQueryParam"
       - name: body
         in: body
         description: Adds additional recipient top signature request
         required: true
         schema:
           "$ref": "#/definitions/Recipient_Create_Model"
-      - "$ref": "#/parameters/signatureRequestIdQueryParam"
       responses:
         '200':
           description: Success
@@ -2272,7 +2288,7 @@ paths:
               items:
                 type: array
                 items:
-                  "$ref": "#/definitions/Additional_Document"
+                  - "$ref": "#/definitions/Additional_Document"
               total:
                 type: integer
                 default: 1
@@ -2627,12 +2643,12 @@ definitions:
     properties:
       grant_type:
         type: string
+        description: Authentication grant type
         default: password
         enum:
         - password
         - authorization_code
         - refresh_token
-        description: Authentication grant type.
       client_id:
         type: string
         description: 'client_id obtained from PDFFiller: https://pdffiller.com/en/apiform/token.htm'
@@ -3663,6 +3679,9 @@ definitions:
         type: object
         title: Access_Field
         description: Access to fillable fields
+        required:
+        - allow
+        - deny
         properties:
           allow:
             type: array
@@ -3764,6 +3783,9 @@ definitions:
               type: object
               description: Access to fillable fields
               title: Fillable_Fields_Access
+              required:
+              - allow
+              - deny
               properties:
                 allow:
                   type: array
@@ -3797,7 +3819,6 @@ definitions:
       id:
         type: integer
         format: int64
-        default: 1
         description: Callback id
       event_id:
         type: string
@@ -3810,6 +3831,8 @@ definitions:
   Token_Model_Body:
     type: object
     title: Token_Model_Body
+    required:
+    - data
     properties:
       data:
         type: array
@@ -3837,6 +3860,10 @@ definitions:
           type: string
   User_Response:
     type: object
+    required:
+    - id
+    - email
+    - avatar
     properties:
       id:
         type: integer
